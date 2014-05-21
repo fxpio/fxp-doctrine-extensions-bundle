@@ -2,7 +2,7 @@
     "name": "sonatra/doctrine-extensions-bundle",
     "type": "symfony-bundle",
     "description": "Sonatra DoctrineExtensions Bundle",
-    "keywords": ["Doctrine", "Extensions"],
+    "keywords": ["Doctrine", "Extensions", "Validator", "Unique Entity"],
     "homepage": "http://sonatra.com",
     "license": "MIT",
     "authors": [
