@@ -1,0 +1,16 @@
+parameters:
+    sonatra_doctrine_extensions.orm.validator.unique.class: Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints\UniqueEntityValidator
+    sonatra_doctrine_extensions.validator.doctrine_callback.base.class: Sonatra\Bundle\DoctrineExtensionsBundle\Validator\DoctrineCallbackValidator
+
+services:
+    sonatra_doctrine_extensions.orm.validator.unique:
+       class:      '%sonatra_doctrine_extensions.orm.validator.unique.class%'
+       arguments: ['@doctrine']
+       tags:
+            - { name: validator.constraint_validator, alias: sonatra_doctrine_extensions.orm.validator.unique }
+
+    sonatra_doctrine_extensions.validator.doctrine_callback:
+           class:      '%sonatra_doctrine_extensions.validator.doctrine_callback.base.class%'
+           arguments: ['@doctrine']
+           tags:
+                - { name: validator.constraint_validator, alias: validator.doctrinecallback }
