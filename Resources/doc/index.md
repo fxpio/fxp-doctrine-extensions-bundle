@@ -53,3 +53,7 @@ public function registerBundles()
 
 Now that you have completed the basic installation and configuration of the
 Sonatra DoctrineExtensionsBundle, you are ready to learn about usages of the bundle.
+
+The following documents are available:
+
+- [Doctrine callback validation](doctrine_callback_validation.md)

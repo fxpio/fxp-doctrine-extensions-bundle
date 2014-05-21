@@ -3,6 +3,10 @@ Sonatra Doctrine Extensions Bundle
 
 The Sonatra DoctrineExtensionsBundle add doctrine validators.
 
+Features include:
+
+- Unique Entity Validator
+
 Documentation
 -------------
 
