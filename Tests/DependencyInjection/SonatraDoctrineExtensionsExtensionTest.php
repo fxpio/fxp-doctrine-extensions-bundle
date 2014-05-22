@@ -27,7 +27,7 @@ class SonatraDoctrineExtensionsExtensionTest extends \PHPUnit_Framework_TestCase
         $container = $this->createContainer();
 
         $this->assertTrue($container->hasExtension('sonatra_doctrine_extensions'));
-        $this->assertTrue($container->hasDefinition('sonatra_doctrine_extensions.orm.validator.unique'));
+        $this->assertTrue($container->hasDefinition('sonatra_doctrine_extensions.validator.unique_entity'));
         $this->assertTrue($container->hasDefinition('sonatra_doctrine_extensions.validator.doctrine_callback'));
     }
 

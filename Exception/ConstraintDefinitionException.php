@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception;
+namespace Sonatra\Bundle\DoctrineExtensionsBundle\Exception;
 
-use Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException as BaseConstraintDefinitionException;
 
 /**

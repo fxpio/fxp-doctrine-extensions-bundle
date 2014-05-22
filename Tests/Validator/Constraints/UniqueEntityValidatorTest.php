@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Doctrine\Validator\Constraints;
+namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Validator\Constraints;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,8 +23,8 @@ use Symfony\Component\Validator\Tests\Fixtures\FakeMetadataFactory;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\DoubleNameEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity;
-use Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints\UniqueEntity;
-use Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints\UniqueEntityValidator;
+use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntity;
+use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -36,6 +36,119 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    protected function createRegistryMock($entityManagerName, $em)
+    {
+        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry->expects($this->any())
+            ->method('getManager')
+            ->with($this->equalTo($entityManagerName))
+            ->will($this->returnValue($em));
+
+        return $registry;
+    }
+
+    protected function createRepositoryMock()
+    {
+        $repository = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')
+            ->setMethods(array('findByCustom', 'find', 'findAll', 'findOneBy', 'findBy', 'getClassName'))
+            ->getMock()
+        ;
+
+        return $repository;
+    }
+
+    protected function createEntityManagerMock($repositoryMock)
+    {
+        $em = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectManager')
+            ->getMock()
+        ;
+        $em->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($repositoryMock))
+        ;
+
+        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata
+            ->expects($this->any())
+            ->method('hasField')
+            ->will($this->returnValue(true))
+        ;
+        $refl = $this->getMockBuilder('Doctrine\Common\Reflection\StaticReflectionProperty')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getValue'))
+            ->getMock()
+        ;
+        $refl
+            ->expects($this->any())
+            ->method('getValue')
+            ->will($this->returnValue(true))
+        ;
+        $classMetadata->reflFields = array('name' => $refl);
+        $em->expects($this->any())
+            ->method('getClassMetadata')
+            ->will($this->returnValue($classMetadata))
+        ;
+
+        return $em;
+    }
+
+    protected function createValidatorFactory($uniqueValidator)
+    {
+        $validatorFactory = $this->getMock('Symfony\Component\Validator\ConstraintValidatorFactoryInterface');
+        $validatorFactory->expects($this->any())
+            ->method('getInstance')
+            ->with($this->isInstanceOf('Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntity'))
+            ->will($this->returnValue($uniqueValidator));
+
+        return $validatorFactory;
+    }
+
+    protected function createValidator($entityManagerName, $em, $validateClass = null, $uniqueFields = null, $errorPath = null, $repositoryMethod = 'findBy', $ignoreNull = true, array $filters = array(), $all = true)
+    {
+        if (!$validateClass) {
+            $validateClass = 'Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity';
+        }
+        if (!$uniqueFields) {
+            $uniqueFields = array('name');
+        }
+
+        /* @var ManagerRegistry $registry */
+        $registry = $this->createRegistryMock($entityManagerName, $em);
+
+        $uniqueValidator = new UniqueEntityValidator($registry);
+
+        $metadata = new ClassMetadata($validateClass);
+        $constraint = new UniqueEntity(array(
+            'fields' => $uniqueFields,
+            'em' => $entityManagerName,
+            'errorPath' => $errorPath,
+            'repositoryMethod' => $repositoryMethod,
+            'ignoreNull' => $ignoreNull,
+            'filters' => $filters,
+            'allFilters' => $all,
+        ));
+        $metadata->addConstraint($constraint);
+
+        $metadataFactory = new FakeMetadataFactory();
+        $metadataFactory->addMetadata($metadata);
+        /* @var ConstraintValidatorFactoryInterface $validatorFactory */
+        $validatorFactory = $this->createValidatorFactory($uniqueValidator);
+
+        return new Validator($metadataFactory, $validatorFactory, new DefaultTranslator());
+    }
+
+    protected function createSchema($em)
+    {
+        /* @var EntityManagerInterface $em */
+        $schemaTool = new SchemaTool($em);
+        $schemaTool->createSchema(array(
+                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity'),
+                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\DoubleNameEntity'),
+                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\CompositeIntIdEntity'),
+                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity'),
+            ));
+    }
+
     public function testConstraintIsNotUniqueEntity()
     {
         /* @var ManagerRegistry $registry */
@@ -48,7 +161,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\UnexpectedTypeException');
+        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
@@ -63,7 +176,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = new UniqueEntity(array('fields' => 42));
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\UnexpectedTypeException');
+        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
@@ -78,7 +191,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = new UniqueEntity(array('fields' => 'name', 'errorPath' => 42));
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\UnexpectedTypeException');
+        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
@@ -94,7 +207,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint->fields = array();
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\ConstraintDefinitionException');
+        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException');
         $validator->validate($entity, $constraint);
     }
 
@@ -106,7 +219,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = $this->createValidator($entityManagerName, $em, null, '42');
         $entity1 = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\ConstraintDefinitionException');
+        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException');
         $validator->validate($entity1);
     }
 
@@ -412,7 +525,6 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableOneFilterAndReactivateAfter()
     {
-        //TODO
         $entityManagerName = "foo";
         $em = DoctrineTestHelper::createTestEntityManager();
         $em->getConfiguration()->addFilter('fooFilter1', 'Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures\FooFilter');
@@ -429,118 +541,5 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, $violationsList->count());
         $this->assertCount(2, $em->getFilters()->getEnabledFilters());
-    }
-
-    protected function createRegistryMock($entityManagerName, $em)
-    {
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $registry->expects($this->any())
-            ->method('getManager')
-            ->with($this->equalTo($entityManagerName))
-            ->will($this->returnValue($em));
-
-        return $registry;
-    }
-
-    protected function createRepositoryMock()
-    {
-        $repository = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')
-            ->setMethods(array('findByCustom', 'find', 'findAll', 'findOneBy', 'findBy', 'getClassName'))
-            ->getMock()
-        ;
-
-        return $repository;
-    }
-
-    protected function createEntityManagerMock($repositoryMock)
-    {
-        $em = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectManager')
-            ->getMock()
-        ;
-        $em->expects($this->any())
-            ->method('getRepository')
-            ->will($this->returnValue($repositoryMock))
-        ;
-
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $classMetadata
-            ->expects($this->any())
-            ->method('hasField')
-            ->will($this->returnValue(true))
-        ;
-        $refl = $this->getMockBuilder('Doctrine\Common\Reflection\StaticReflectionProperty')
-            ->disableOriginalConstructor()
-            ->setMethods(array('getValue'))
-            ->getMock()
-        ;
-        $refl
-            ->expects($this->any())
-            ->method('getValue')
-            ->will($this->returnValue(true))
-        ;
-        $classMetadata->reflFields = array('name' => $refl);
-        $em->expects($this->any())
-            ->method('getClassMetadata')
-            ->will($this->returnValue($classMetadata))
-        ;
-
-        return $em;
-    }
-
-    protected function createValidatorFactory($uniqueValidator)
-    {
-        $validatorFactory = $this->getMock('Symfony\Component\Validator\ConstraintValidatorFactoryInterface');
-        $validatorFactory->expects($this->any())
-            ->method('getInstance')
-            ->with($this->isInstanceOf('Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints\UniqueEntity'))
-            ->will($this->returnValue($uniqueValidator));
-
-        return $validatorFactory;
-    }
-
-    protected function createValidator($entityManagerName, $em, $validateClass = null, $uniqueFields = null, $errorPath = null, $repositoryMethod = 'findBy', $ignoreNull = true, array $filters = array(), $all = true)
-    {
-        if (!$validateClass) {
-            $validateClass = 'Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity';
-        }
-        if (!$uniqueFields) {
-            $uniqueFields = array('name');
-        }
-
-        /* @var ManagerRegistry $registry */
-        $registry = $this->createRegistryMock($entityManagerName, $em);
-
-        $uniqueValidator = new UniqueEntityValidator($registry);
-
-        $metadata = new ClassMetadata($validateClass);
-        $constraint = new UniqueEntity(array(
-            'fields' => $uniqueFields,
-            'em' => $entityManagerName,
-            'errorPath' => $errorPath,
-            'repositoryMethod' => $repositoryMethod,
-            'ignoreNull' => $ignoreNull,
-            'filters' => $filters,
-            'allFilters' => $all,
-        ));
-        $metadata->addConstraint($constraint);
-
-        $metadataFactory = new FakeMetadataFactory();
-        $metadataFactory->addMetadata($metadata);
-        /* @var ConstraintValidatorFactoryInterface $validatorFactory */
-        $validatorFactory = $this->createValidatorFactory($uniqueValidator);
-
-        return new Validator($metadataFactory, $validatorFactory, new DefaultTranslator());
-    }
-
-    protected function createSchema($em)
-    {
-        /* @var EntityManagerInterface $em */
-        $schemaTool = new SchemaTool($em);
-        $schemaTool->createSchema(array(
-                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity'),
-                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\DoubleNameEntity'),
-                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\CompositeIntIdEntity'),
-                $em->getClassMetadata('Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity'),
-            ));
     }
 }
