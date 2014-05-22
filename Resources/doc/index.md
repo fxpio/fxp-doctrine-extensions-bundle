@@ -56,4 +56,5 @@ Sonatra DoctrineExtensionsBundle, you are ready to learn about usages of the bun
 
 The following documents are available:
 
+- [Doctrine unique entity validation](doctrine_unique_entity.rst)
 - [Doctrine callback validation](doctrine_callback_validation.md)
