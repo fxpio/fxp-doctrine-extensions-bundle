@@ -112,7 +112,7 @@ class UniqueEntityValidator extends ConstraintValidator
             }
         }
 
-        $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allfilters);
+        $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allFilters);
 
         $this->actionFilter($em, 'disable', $filters);
         $repository = $em->getRepository($className);

@@ -24,5 +24,5 @@ class UniqueEntity extends BaseUniqueEntity
 {
     public $service = 'sonatra.doctrine_extensions.orm.validator.unique';
     public $filters = array();
-    public $allfilters = true;
+    public $allFilters = true;
 }
