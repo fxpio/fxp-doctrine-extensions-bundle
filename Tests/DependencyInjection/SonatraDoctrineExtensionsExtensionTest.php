@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SessionBundle\Tests\DependencyInjection;
+namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\DependencyInjection;
 
 use Sonatra\Bundle\DoctrineExtensionsBundle\DependencyInjection\SonatraDoctrineExtensionsExtension;
 use Sonatra\Bundle\DoctrineExtensionsBundle\SonatraDoctrineExtensionsBundle;
