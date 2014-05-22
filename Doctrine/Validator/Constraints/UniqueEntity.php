@@ -14,7 +14,7 @@ namespace Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as BaseUniqueEntity;
 
 /**
- * Constraint for the Unique Entity validator with disable sqlfilter option.
+ * Constraint for the Unique Entity validator with disable sql filter option.
  *
  * @Annotation
  *
