@@ -14,6 +14,7 @@ namespace Sonatra\Bundle\DoctrineExtensionsBundle\Doctrine\Validator\Constraints
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Exception\UnexpectedTypeException;
@@ -54,6 +55,10 @@ class UniqueEntityValidator extends ConstraintValidator
     {
         /* @var UniqueEntity $constraint */
 
+        if (!$constraint instanceof UniqueEntity) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\UniqueEntity');
+        }
+
         if (!is_array($constraint->fields) && !is_string($constraint->fields)) {
             throw new UnexpectedTypeException($constraint->fields, 'array');
         }
@@ -71,16 +76,21 @@ class UniqueEntityValidator extends ConstraintValidator
         if ($constraint->em) {
             $em = $this->registry->getManager($constraint->em);
 
+            if (!$em) {
+                throw new ConstraintDefinitionException(sprintf('Object manager "%s" does not exist.', $constraint->em));
+            }
         } else {
             $em = $this->registry->getManagerForClass(get_class($entity));
+
+            if (!$em) {
+                throw new ConstraintDefinitionException(sprintf('Unable to find the object manager associated with an entity of class "%s".', get_class($entity)));
+            }
         }
 
-        $className = $this->context->getClassName();
-        $class = $em->getClassMetadata($className);
-        /* @var \Doctrine\Common\Persistence\Mapping\ClassMetadata $class */
+        $class = $em->getClassMetadata(get_class($entity));
+        /* @var ClassMetadata $class */
 
         $criteria = array();
-
         foreach ($fields as $fieldName) {
             if (!$class->hasField($fieldName) && !$class->hasAssociation($fieldName)) {
                 throw new ConstraintDefinitionException(sprintf("The field '%s' is not mapped by Doctrine, so it cannot be validated for uniqueness.", $fieldName));
@@ -92,7 +102,7 @@ class UniqueEntityValidator extends ConstraintValidator
                 return;
             }
 
-            if ($class->hasAssociation($fieldName)) {
+            if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
                 /* Ensure the Proxy is initialized before using reflection to
                  * read its identifiers. This is necessary because the wrapped
                  * getter methods in the Proxy are being bypassed.
@@ -105,7 +115,7 @@ class UniqueEntityValidator extends ConstraintValidator
                 if (count($relatedId) > 1) {
                     throw new ConstraintDefinitionException(
                         "Associated entities are not allowed to have more than one identifier field to be " .
-                        "part of a unique constraint in: " . $class->getName() . "#" . $fieldName
+                        "part of a unique constraint in: ".$class->getName()."#".$fieldName
                     );
                 }
                 $criteria[$fieldName] = array_pop($relatedId);
@@ -115,16 +125,12 @@ class UniqueEntityValidator extends ConstraintValidator
         $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allFilters);
 
         $this->actionFilter($em, 'disable', $filters);
-        $repository = $em->getRepository($className);
+        $repository = $em->getRepository(get_class($entity));
         $result = $repository->{$constraint->repositoryMethod}($criteria);
         $this->actionFilter($em, 'enable', $filters);
 
-        /* If the result is a MongoCursor, it must be advanced to the first
-         * element. Rewinding should have no ill effect if $result is another
-         * iterator implementation.
-         */
-        if ($result instanceof \Iterator) {
-            $result->rewind();
+        if (is_array($result)) {
+            reset($result);
         }
 
         /* If no entity matched the query criteria or a single entity matched,
@@ -155,10 +161,7 @@ class UniqueEntityValidator extends ConstraintValidator
             return array();
         }
 
-        if ($all && !empty($filters)) {
-            $all = false;
-        }
-
+        $all = ($all && !empty($filters)) ? false : $all;
         $enabledFilters = $om->getFilters()->getEnabledFilters();
         $reactivateFilters = array();
 
@@ -180,12 +183,10 @@ class UniqueEntityValidator extends ConstraintValidator
      */
     private function actionFilter(ObjectManager $om, $action, array $filters)
     {
-        if (!$om instanceof EntityManager || empty($filters)) {
-            return;
-        }
-
-        foreach ($filters as $name) {
-            $om->getFilters()->$action($name);
+        if ($om instanceof EntityManager) {
+            foreach ($filters as $name) {
+                $om->getFilters()->$action($name);
+            }
         }
     }
 }
