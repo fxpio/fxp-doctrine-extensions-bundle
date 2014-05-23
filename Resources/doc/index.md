@@ -9,10 +9,10 @@ This version of the bundle requires Symfony 2.4+.
 
 Installation is a quick, 2 step process:
 
-1. Download Sonatra DoctrineExtensionsBundle using composer
+1. Download the bundle using composer
 2. Enable the bundle
 
-### Step 1: Download Sonatra DoctrineExtensionsBundle using composer
+### Step 1: Download the bundle using composer
 
 Add Sonatra DoctrineExtensionsBundle in your composer.json:
 
