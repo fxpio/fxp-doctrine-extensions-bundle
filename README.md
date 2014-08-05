@@ -1,6 +1,9 @@
 Sonatra Doctrine Extensions Bundle
 ==================================
 
+[![Latest Stable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/stable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/unstable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
+
 The Sonatra DoctrineExtensionsBundle add doctrine validators.
 
 Features include:
