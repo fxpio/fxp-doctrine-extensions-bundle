@@ -55,6 +55,51 @@ class UniqueEntityValidator extends ConstraintValidator
     {
         /* @var UniqueEntity $constraint */
 
+        $em = $this->getObjectManager($entity, $constraint);
+        $fields = (array) $constraint->fields;
+        $criteria = $this->getCriteria($entity, $constraint, $em);
+
+        if (null === $criteria) {
+            return;
+        }
+
+        $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allFilters);
+
+        $this->actionFilter($em, 'disable', $filters);
+        $repository = $em->getRepository(get_class($entity));
+        $result = $repository->{$constraint->repositoryMethod}($criteria);
+        $this->actionFilter($em, 'enable', $filters);
+
+        if (is_array($result)) {
+            reset($result);
+        }
+
+        /* If no entity matched the query criteria or a single entity matched,
+         * which is the same as the entity being validated, the criteria is
+         * unique.
+         */
+        if (0 === count($result) || (1 === count($result) && $entity === ($result instanceof \Iterator ? $result->current() : current($result)))) {
+            return;
+        }
+
+        $errorPath = null !== $constraint->errorPath ? $constraint->errorPath : $fields[0];
+
+        $this->context->addViolationAt($errorPath, $constraint->message, array(), $criteria[$fields[0]]);
+    }
+
+    /**
+     * Pre validate entity.
+     *
+     * @param object     $entity
+     * @param Constraint $constraint
+     *
+     * @return ObjectManager
+     *
+     * @throws UnexpectedTypeException
+     * @throws ConstraintDefinitionException
+     */
+    private function getObjectManager($entity, Constraint $constraint)
+    {
         if (!$constraint instanceof UniqueEntity) {
             throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\UniqueEntity');
         }
@@ -87,10 +132,28 @@ class UniqueEntityValidator extends ConstraintValidator
             }
         }
 
-        $class = $em->getClassMetadata(get_class($entity));
-        /* @var ClassMetadata $class */
+        return $em;
+    }
 
+    /**
+     * Gets criteria.
+     *
+     * @param object        $entity
+     * @param Constraint    $constraint
+     * @param ObjectManager $em
+     *
+     * @return array|null Null if there is no constraint
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function getCriteria($entity, Constraint $constraint, ObjectManager $em)
+    {
+        /* @var UniqueEntity $constraint */
+        /* @var ClassMetadata $class */
+        $class = $em->getClassMetadata(get_class($entity));
+        $fields = (array) $constraint->fields;
         $criteria = array();
+
         foreach ($fields as $fieldName) {
             if (!$class->hasField($fieldName) && !$class->hasAssociation($fieldName)) {
                 throw new ConstraintDefinitionException(sprintf("The field '%s' is not mapped by Doctrine, so it cannot be validated for uniqueness.", $fieldName));
@@ -99,7 +162,7 @@ class UniqueEntityValidator extends ConstraintValidator
             $criteria[$fieldName] = $class->reflFields[$fieldName]->getValue($entity);
 
             if ($constraint->ignoreNull && null === $criteria[$fieldName]) {
-                return;
+                return null;
             }
 
             if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
@@ -122,28 +185,7 @@ class UniqueEntityValidator extends ConstraintValidator
             }
         }
 
-        $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allFilters);
-
-        $this->actionFilter($em, 'disable', $filters);
-        $repository = $em->getRepository(get_class($entity));
-        $result = $repository->{$constraint->repositoryMethod}($criteria);
-        $this->actionFilter($em, 'enable', $filters);
-
-        if (is_array($result)) {
-            reset($result);
-        }
-
-        /* If no entity matched the query criteria or a single entity matched,
-         * which is the same as the entity being validated, the criteria is
-         * unique.
-         */
-        if (0 === count($result) || (1 === count($result) && $entity === ($result instanceof \Iterator ? $result->current() : current($result)))) {
-            return;
-        }
-
-        $errorPath = null !== $constraint->errorPath ? $constraint->errorPath : $fields[0];
-
-        $this->context->addViolationAt($errorPath, $constraint->message, array(), $criteria[$fields[0]]);
+        return $criteria;
     }
 
     /**
