@@ -11,7 +11,6 @@
 
 namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
@@ -24,13 +23,12 @@ class FooCallbackValidatorClass
     /**
      * Validates static method in class.
      *
-     * @param $object
+     * @param object           $object
      * @param ExecutionContext $context
-     * @param ManagerRegistry  $registry
      *
      * @return bool
      */
-    public static function validateCallback($object, ExecutionContext $context, ManagerRegistry $registry)
+    public static function validateCallback($object, ExecutionContext $context)
     {
         $context->addViolation('Callback message', array('{{ value }}' => 'foobar'), 'invalidValue');
 

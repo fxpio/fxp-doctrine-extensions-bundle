@@ -119,7 +119,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
     public function testClosure()
     {
         $object = new FooCallbackValidatorObject();
-        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context, ManagerRegistry $registry) {
+        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context) {
             $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
             return false;
@@ -136,7 +136,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testClosureNullObject()
     {
-        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context, ManagerRegistry $registry) {
+        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context) {
             $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
             return false;
@@ -155,7 +155,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $object = new FooCallbackValidatorObject();
         $constraint = new DoctrineCallback(array(
-            'callback' => function ($object, ExecutionContext $context, ManagerRegistry $registry) {
+            'callback' => function ($object, ExecutionContext $context) {
                     $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
                     return false;
@@ -220,6 +220,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
     public function testExpectValidConstraint()
     {
         $object = new FooCallbackValidatorObject();
+        /* @var Constraint $constraint */
         $constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
 
         $this->validator->validate($object, $constraint);
