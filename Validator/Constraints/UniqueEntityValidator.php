@@ -202,9 +202,7 @@ class UniqueEntityValidator extends ConstraintValidator
      */
     private function findFieldCriteria(array $criteria, Constraint $constraint, ObjectManager $em, ClassMetadata $class, $entity, $fieldName)
     {
-        if (!$class->hasField($fieldName) && !$class->hasAssociation($fieldName)) {
-            throw new ConstraintDefinitionException(sprintf("The field '%s' is not mapped by Doctrine, so it cannot be validated for uniqueness.", $fieldName));
-        }
+        $this->validateFieldCriteria($class, $fieldName);
 
         /* @var \Doctrine\ORM\Mapping\ClassMetadata $class */
         $criteria[$fieldName] = $class->reflFields[$fieldName]->getValue($entity);
@@ -214,22 +212,35 @@ class UniqueEntityValidator extends ConstraintValidator
             return null;
         }
 
-        $this->findFieldCriteriaStep2($criteria, $em, $class, $fieldName);
-
-        return $criteria;
+        return $this->findFieldCriteriaStep2($criteria, $em, $class, $fieldName);
     }
 
     /**
-     * Finds the criteria for the entity field.
-     *
-     * @param array         $criteria  By reference
-     * @param ObjectManager $em
      * @param ClassMetadata $class
      * @param string        $fieldName
      *
      * @throws ConstraintDefinitionException
      */
-    private function findFieldCriteriaStep2(array &$criteria, ObjectManager $em, ClassMetadata $class, $fieldName)
+    private function validateFieldCriteria(ClassMetadata $class, $fieldName)
+    {
+        if (!$class->hasField($fieldName) && !$class->hasAssociation($fieldName)) {
+            throw new ConstraintDefinitionException(sprintf("The field '%s' is not mapped by Doctrine, so it cannot be validated for uniqueness.", $fieldName));
+        }
+    }
+
+    /**
+     * Finds the criteria for the entity field.
+     *
+     * @param array         $criteria
+     * @param ObjectManager $em
+     * @param ClassMetadata $class
+     * @param string        $fieldName
+     *
+     * @return array The new criteria
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function findFieldCriteriaStep2(array $criteria, ObjectManager $em, ClassMetadata $class, $fieldName)
     {
         if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
             /* Ensure the Proxy is initialized before using reflection to
@@ -249,6 +260,8 @@ class UniqueEntityValidator extends ConstraintValidator
             }
             $criteria[$fieldName] = array_pop($relatedId);
         }
+
+        return $criteria;
     }
 
     /**
