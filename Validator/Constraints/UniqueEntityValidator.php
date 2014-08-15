@@ -161,6 +161,7 @@ class UniqueEntityValidator extends ConstraintValidator
 
             $criteria[$fieldName] = $class->reflFields[$fieldName]->getValue($entity);
 
+            /* @var UniqueEntity $constraint */
             if ($constraint->ignoreNull && null === $criteria[$fieldName]) {
                 return null;
             }
