@@ -41,7 +41,7 @@ class Util
         $all = ($all && !empty($filters)) ? false : $all;
         $enabledFilters = $om->getFilters()->getEnabledFilters();
 
-        return static::doFindFilters($filters, $enabledFilters, $all);
+        return self::doFindFilters($filters, $enabledFilters, $all);
     }
 
     /**
@@ -96,10 +96,10 @@ class Util
      */
     public static function getObjectManager(ManagerRegistry $registry, $entity, Constraint $constraint)
     {
-        static::validateConstraint($constraint);
+        self::validateConstraint($constraint);
         /* @var UniqueEntity $constraint */
 
-        return static::findObjectManager($registry, $entity, $constraint);
+        return self::findObjectManager($registry, $entity, $constraint);
     }
 
     /**
