@@ -83,6 +83,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValue(true))
         ;
+        /* @var \Doctrine\ORM\Mapping\ClassMetadata $classMetadata */
         $classMetadata->reflFields = array('name' => $refl);
         $em->expects($this->any())
             ->method('getClassMetadata')
