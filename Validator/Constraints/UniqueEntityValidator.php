@@ -100,6 +100,20 @@ class UniqueEntityValidator extends ConstraintValidator
      */
     private function getObjectManager($entity, Constraint $constraint)
     {
+        $this->validateConstraint($constraint);
+        /* @var UniqueEntity $constraint */
+
+        return $this->findObjectManager($entity, $constraint);
+    }
+
+    /**
+     * @param Constraint $constraint
+     *
+     * @throws UnexpectedTypeException
+     * @throws ConstraintDefinitionException
+     */
+    private function validateConstraint(Constraint $constraint)
+    {
         if (!$constraint instanceof UniqueEntity) {
             throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\UniqueEntity');
         }
@@ -112,12 +126,21 @@ class UniqueEntityValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint->errorPath, 'string or null');
         }
 
-        $fields = (array) $constraint->fields;
-
-        if (0 === count($fields)) {
+        if (0 === count((array) $constraint->fields)) {
             throw new ConstraintDefinitionException('At least one field has to be specified.');
         }
+    }
 
+    /**
+     * @param object       $entity
+     * @param UniqueEntity $constraint
+     *
+     * @return ObjectManager
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function findObjectManager($entity, UniqueEntity $constraint)
+    {
         if ($constraint->em) {
             $em = $this->registry->getManager($constraint->em);
 
