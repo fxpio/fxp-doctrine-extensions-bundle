@@ -52,6 +52,23 @@ class DoctrineCallbackValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\DoctrineCallback');
         }
 
+        $res = $this->doValidateCallback($object, $constraint);
+
+        if (!$res && null !== $object) {
+            $this->callObjectMethod($object, $constraint->callback);
+        }
+    }
+
+    /**
+     * @param mixed            $object
+     * @param DoctrineCallback $constraint
+     *
+     * @return bool
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function doValidateCallback($object, DoctrineCallback $constraint)
+    {
         $callback = $constraint->callback;
 
         if (is_array($callback) || $callback instanceof \Closure) {
@@ -61,14 +78,20 @@ class DoctrineCallbackValidator extends ConstraintValidator
 
             call_user_func($callback, $object, $this->context, $this->registry);
 
-            return;
+            return true;
         }
 
-        if (null === $object) {
-            return;
-        }
+        return false;
+    }
 
-        /* @var string $callback */
+    /**
+     * @param mixed  $object
+     * @param string $callback
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function callObjectMethod($object, $callback)
+    {
         if (!method_exists($object, $callback)) {
             throw new ConstraintDefinitionException(sprintf('Method "%s" targeted by Callback constraint does not exist', $callback));
         }
