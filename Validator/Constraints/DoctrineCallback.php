@@ -31,16 +31,8 @@ class DoctrineCallback extends Constraint
      */
     public function __construct($options = null)
     {
-        // Invocation through annotations with an array parameter only
-        if (is_array($options) && 1 === count($options) && isset($options['value'])) {
-            $options = $options['value'];
-        }
-
-        if (is_array($options) && !isset($options['callback']) && !isset($options['groups'])) {
-            if (is_callable($options)) {
-                $options = array('callback' => $options);
-            }
-        }
+        $this->initArraySingleOption($options);
+        $this->initArrayCallbackOption($options);
 
         parent::__construct($options);
     }
@@ -59,5 +51,39 @@ class DoctrineCallback extends Constraint
     public function getTargets()
     {
         return array(self::CLASS_CONSTRAINT, self::PROPERTY_CONSTRAINT);
+    }
+
+    /**
+     * Invocation through annotations with an array parameter only.
+     *
+     * @param mixed|null $options
+     *
+     * @return mixed
+     */
+    protected function initArraySingleOption($options)
+    {
+        if (is_array($options) && 1 === count($options) && isset($options['value'])) {
+            $options = $options['value'];
+        }
+
+        return $options;
+    }
+
+    /**
+     * Init callback options.
+     *
+     * @param mixed $options
+     *
+     * @return array|mixed
+     */
+    protected function initArrayCallbackOption($options)
+    {
+        if (is_array($options) && !isset($options['callback']) && !isset($options['groups'])) {
+            if (is_callable($options)) {
+                $options = array('callback' => $options);
+            }
+        }
+
+        return $options;
     }
 }
