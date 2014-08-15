@@ -212,7 +212,9 @@ class UniqueEntityValidator extends ConstraintValidator
             return null;
         }
 
-        return $this->findFieldCriteriaStep2($criteria, $em, $class, $fieldName);
+        $this->findFieldCriteriaStep2($criteria, $em, $class, $fieldName);
+
+        return $criteria;
     }
 
     /**
@@ -236,11 +238,9 @@ class UniqueEntityValidator extends ConstraintValidator
      * @param ClassMetadata $class
      * @param string        $fieldName
      *
-     * @return array The new criteria
-     *
      * @throws ConstraintDefinitionException
      */
-    private function findFieldCriteriaStep2(array $criteria, ObjectManager $em, ClassMetadata $class, $fieldName)
+    private function findFieldCriteriaStep2(array &$criteria, ObjectManager $em, ClassMetadata $class, $fieldName)
     {
         if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
             /* Ensure the Proxy is initialized before using reflection to
@@ -260,8 +260,6 @@ class UniqueEntityValidator extends ConstraintValidator
             }
             $criteria[$fieldName] = array_pop($relatedId);
         }
-
-        return $criteria;
     }
 
     /**
