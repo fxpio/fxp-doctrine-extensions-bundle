@@ -206,6 +206,21 @@ class UniqueEntityValidator extends ConstraintValidator
 
         $all = ($all && !empty($filters)) ? false : $all;
         $enabledFilters = $om->getFilters()->getEnabledFilters();
+
+        return $this->doFindFilters($filters, $enabledFilters, $all);
+    }
+
+    /**
+     * Do find filters.
+     *
+     * @param array $filters
+     * @param array $enabledFilters
+     * @param bool  $all
+     *
+     * @return array
+     */
+    private function doFindFilters(array $filters, array $enabledFilters, $all)
+    {
         $reactivateFilters = array();
 
         foreach ($enabledFilters as $name => $filter) {
