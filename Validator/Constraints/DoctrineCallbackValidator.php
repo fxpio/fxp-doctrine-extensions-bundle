@@ -68,6 +68,7 @@ class DoctrineCallbackValidator extends ConstraintValidator
             return;
         }
 
+        /* @var string $callback */
         if (!method_exists($object, $callback)) {
             throw new ConstraintDefinitionException(sprintf('Method "%s" targeted by Callback constraint does not exist', $callback));
         }
