@@ -12,9 +12,9 @@
 namespace Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException;
@@ -172,7 +172,7 @@ class UniqueEntityValidator extends ConstraintValidator
     private function getCriteria($entity, Constraint $constraint, ObjectManager $em)
     {
         /* @var UniqueEntity $constraint */
-        /* @var ClassMetadata $class */
+        /* @var \Doctrine\ORM\Mapping\ClassMetadata $class */
         $class = $em->getClassMetadata(get_class($entity));
         $fields = (array) $constraint->fields;
         $criteria = array();
@@ -186,30 +186,46 @@ class UniqueEntityValidator extends ConstraintValidator
 
             /* @var UniqueEntity $constraint */
             if ($constraint->ignoreNull && null === $criteria[$fieldName]) {
-                return null;
+                $criteria = null;
+                break;
             }
 
-            if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
-                /* Ensure the Proxy is initialized before using reflection to
-                 * read its identifiers. This is necessary because the wrapped
-                 * getter methods in the Proxy are being bypassed.
-                 */
-                $em->initializeObject($criteria[$fieldName]);
-
-                $relatedClass = $em->getClassMetadata($class->getAssociationTargetClass($fieldName));
-                $relatedId = $relatedClass->getIdentifierValues($criteria[$fieldName]);
-
-                if (count($relatedId) > 1) {
-                    throw new ConstraintDefinitionException(
-                        "Associated entities are not allowed to have more than one identifier field to be " .
-                        "part of a unique constraint in: ".$class->getName()."#".$fieldName
-                    );
-                }
-                $criteria[$fieldName] = array_pop($relatedId);
-            }
+            $this->findFieldCriteria($criteria, $em, $class, $fieldName);
         }
 
         return $criteria;
+    }
+
+    /**
+     * Finds the criteria for the entity field.
+     *
+     * @param array         $criteria  By reference
+     * @param ObjectManager $em
+     * @param ClassMetadata $class
+     * @param string        $fieldName
+     *
+     * @throws ConstraintDefinitionException
+     */
+    private function findFieldCriteria(array &$criteria, ObjectManager $em, ClassMetadata $class, $fieldName)
+    {
+        if (null !== $criteria[$fieldName] && $class->hasAssociation($fieldName)) {
+            /* Ensure the Proxy is initialized before using reflection to
+             * read its identifiers. This is necessary because the wrapped
+             * getter methods in the Proxy are being bypassed.
+             */
+            $em->initializeObject($criteria[$fieldName]);
+
+            $relatedClass = $em->getClassMetadata($class->getAssociationTargetClass($fieldName));
+            $relatedId = $relatedClass->getIdentifierValues($criteria[$fieldName]);
+
+            if (count($relatedId) > 1) {
+                throw new ConstraintDefinitionException(
+                    "Associated entities are not allowed to have more than one identifier field to be " .
+                    "part of a unique constraint in: ".$class->getName()."#".$fieldName
+                );
+            }
+            $criteria[$fieldName] = array_pop($relatedId);
+        }
     }
 
     /**
