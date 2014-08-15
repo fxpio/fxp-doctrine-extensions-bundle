@@ -78,10 +78,9 @@ class DoctrineCallback extends Constraint
      */
     protected function initArrayCallbackOption($options)
     {
-        if (is_array($options) && !isset($options['callback']) && !isset($options['groups'])) {
-            if (is_callable($options)) {
-                $options = array('callback' => $options);
-            }
+        if (is_array($options) && !isset($options['callback']) && !isset($options['groups'])
+                && is_callable($options)) {
+            $options = array('callback' => $options);
         }
 
         return $options;
