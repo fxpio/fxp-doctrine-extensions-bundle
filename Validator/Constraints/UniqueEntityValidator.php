@@ -63,6 +63,28 @@ class UniqueEntityValidator extends ConstraintValidator
             return;
         }
 
+        $result = $this->getResult($entity, $constraint, $criteria, $em);
+
+        if (!$this->isValidResult($result, $entity)) {
+            $errorPath = null !== $constraint->errorPath ? $constraint->errorPath : $fields[0];
+
+            $this->context->addViolationAt($errorPath, $constraint->message, array(), $criteria[$fields[0]]);
+        }
+    }
+
+    /**
+     * Get entity result.
+     *
+     * @param object        $entity
+     * @param Constraint    $constraint
+     * @param array         $criteria
+     * @param ObjectManager $em
+     *
+     * @return array
+     */
+    private function getResult($entity, Constraint $constraint, array $criteria, ObjectManager $em)
+    {
+        /* @var UniqueEntity $constraint */
         $filters = $this->findFilters($em, (array) $constraint->filters, $constraint->allFilters);
 
         $this->actionFilter($em, 'disable', $filters);
@@ -74,17 +96,28 @@ class UniqueEntityValidator extends ConstraintValidator
             reset($result);
         }
 
-        /* If no entity matched the query criteria or a single entity matched,
-         * which is the same as the entity being validated, the criteria is
-         * unique.
-         */
-        if (0 === count($result) || (1 === count($result) && $entity === ($result instanceof \Iterator ? $result->current() : current($result)))) {
-            return;
-        }
+        return $result;
+    }
 
-        $errorPath = null !== $constraint->errorPath ? $constraint->errorPath : $fields[0];
-
-        $this->context->addViolationAt($errorPath, $constraint->message, array(), $criteria[$fields[0]]);
+    /**
+     * Check if the result is valid.
+     *
+     * If no entity matched the query criteria or a single entity matched,
+     * which is the same as the entity being validated, the criteria is
+     * unique.
+     *
+     * @param array|\Iterator $result
+     * @param object          $entity
+     *
+     * @return bool
+     */
+    private function isValidResult($result, $entity)
+    {
+        return 0 === count($result)
+            || (1 === count($result)
+                && $entity === ($result instanceof \Iterator
+                    ? $result->current()
+                    : current($result)));
     }
 
     /**
