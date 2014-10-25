@@ -4,7 +4,7 @@ Sonatra Doctrine Extensions Bundle
 [![Latest Stable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/stable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/unstable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
 [![Build Status](https://travis-ci.org/sonatra/SonatraDoctrineExtensionsBundle.svg)](https://travis-ci.org/sonatra/SonatraDoctrineExtensionsBundle)
-[![Coverage Status](https://coveralls.io/repos/sonatra/SonatraDoctrineExtensionsBundle/badge.png)](https://coveralls.io/r/sonatra/SonatraDoctrineExtensionsBundle)
+[![Coverage Status](https://img.shields.io/coveralls/sonatra/SonatraDoctrineExtensionsBundle.svg)](https://coveralls.io/r/sonatra/SonatraDoctrineExtensionsBundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sonatra/SonatraDoctrineExtensionsBundle/badges/quality-score.png)](https://scrutinizer-ci.com/g/sonatra/SonatraDoctrineExtensionsBundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/6cca52a0-52a4-4ebe-80e2-c3fda66e119c/mini.png)](https://insight.sensiolabs.com/projects/6cca52a0-52a4-4ebe-80e2-c3fda66e119c)
 
