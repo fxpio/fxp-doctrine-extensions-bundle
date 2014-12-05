@@ -1,8 +1,7 @@
 Sonatra Doctrine Extensions Bundle
 ==================================
 
-[![Latest Stable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/stable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
-[![Latest Unstable Version](https://poser.pugx.org/sonatra/doctrine-extensions-bundle/v/unstable.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
+[![Latest Version](https://img.shields.io/packagist/v/sonatra/doctrine-extensions-bundle.svg)](https://packagist.org/packages/sonatra/doctrine-extensions-bundle)
 [![Build Status](https://travis-ci.org/sonatra/SonatraDoctrineExtensionsBundle.svg)](https://travis-ci.org/sonatra/SonatraDoctrineExtensionsBundle)
 [![Coverage Status](https://img.shields.io/coveralls/sonatra/SonatraDoctrineExtensionsBundle.svg)](https://coveralls.io/r/sonatra/SonatraDoctrineExtensionsBundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sonatra/SonatraDoctrineExtensionsBundle/badges/quality-score.png)](https://scrutinizer-ci.com/g/sonatra/SonatraDoctrineExtensionsBundle)
