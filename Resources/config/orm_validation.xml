@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter id="sonatra.doctrine_extensions.orm.validator.unique.class">Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntityValidator</parameter>
+        <parameter id="sonatra_doctrine_extensions.orm.validator.doctrine_callback.class">Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\DoctrineCallbackValidator</parameter>
+    </parameters>
+
+    <services>
+        <service id="sonatra.doctrine_extensions.orm.validator.unique" class="%sonatra.doctrine_extensions.orm.validator.unique.class%">
+            <tag name="validator.constraint_validator" alias="sonatra.doctrine_extensions.orm.validator.unique" />
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="sonatra_doctrine_extensions.orm.validator.doctrine_callback" class="%sonatra_doctrine_extensions.orm.validator.doctrine_callback.class%">
+            <tag name="validator.constraint_validator" alias="sonatra_doctrine_extensions.orm.validator.doctrine_callback" />
+            <argument type="service" id="doctrine" />
+        </service>
+    </services>
+</container>
