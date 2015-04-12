@@ -170,7 +170,7 @@ class UniqueEntityValidator extends ConstraintValidator
 
         /* @var UniqueEntity $constraint */
         if ($constraint->ignoreNull && null === $criteria[$fieldName]) {
-            return null;
+            return;
         }
 
         $this->findFieldCriteriaStep2($criteria, $em, $class, $fieldName);
