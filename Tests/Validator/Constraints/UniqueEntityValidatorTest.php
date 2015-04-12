@@ -155,7 +155,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         /* @var ManagerRegistry $registry */
         /* @var Constraint $constraint */
 
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $registry = $this->createRegistryMock($entityManagerName, $em);
         $validator = new UniqueEntityValidator($registry);
@@ -170,7 +170,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
     {
         /* @var ManagerRegistry $registry */
 
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $registry = $this->createRegistryMock($entityManagerName, $em);
         $validator = new UniqueEntityValidator($registry);
@@ -185,7 +185,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
     {
         /* @var ManagerRegistry $registry */
 
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $registry = $this->createRegistryMock($entityManagerName, $em);
         $validator = new UniqueEntityValidator($registry);
@@ -200,7 +200,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
     {
         /* @var ManagerRegistry $registry */
 
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $registry = $this->createRegistryMock($entityManagerName, $em);
         $validator = new UniqueEntityValidator($registry);
@@ -214,7 +214,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstraintHasNotExistingField()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em, null, '42');
@@ -226,25 +226,25 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateUniqueness()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em);
 
         $entity1 = new SingleIntIdEntity(1, 'Foo');
         $violationsList = $validator->validate($entity1);
-        $this->assertEquals(0, $violationsList->count(), "No violations found on entity before it is saved to the database.");
+        $this->assertEquals(0, $violationsList->count(), 'No violations found on entity before it is saved to the database.');
 
         $em->persist($entity1);
         $em->flush();
 
         $violationsList = $validator->validate($entity1);
-        $this->assertEquals(0, $violationsList->count(), "No violations found on entity after it was saved to the database.");
+        $this->assertEquals(0, $violationsList->count(), 'No violations found on entity after it was saved to the database.');
 
         $entity2 = new SingleIntIdEntity(2, 'Foo');
 
         $violationsList = $validator->validate($entity2);
-        $this->assertEquals(1, $violationsList->count(), "Violation found on entity with conflicting entity existing in the database.");
+        $this->assertEquals(1, $violationsList->count(), 'Violation found on entity with conflicting entity existing in the database.');
 
         /* @var ConstraintViolationInterface $violation */
         $violation = $violationsList[0];
@@ -255,7 +255,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateCustomErrorPath()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em, null, null, 'bar');
@@ -268,7 +268,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $entity2 = new SingleIntIdEntity(2, 'Foo');
 
         $violationsList = $validator->validate($entity2);
-        $this->assertEquals(1, $violationsList->count(), "Violation found on entity with conflicting entity existing in the database.");
+        $this->assertEquals(1, $violationsList->count(), 'Violation found on entity with conflicting entity existing in the database.');
 
         /* @var ConstraintViolationInterface $violation */
         $violation = $violationsList[0];
@@ -279,7 +279,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateUniquenessWithNull()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em);
@@ -292,12 +292,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $em->flush();
 
         $violationsList = $validator->validate($entity1);
-        $this->assertEquals(0, $violationsList->count(), "No violations found on entity having a null value.");
+        $this->assertEquals(0, $violationsList->count(), 'No violations found on entity having a null value.');
     }
 
     public function testValidateUniquenessWithIgnoreNull()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $validateClass = 'Symfony\Bridge\Doctrine\Tests\Fixtures\DoubleNameEntity';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
@@ -305,18 +305,18 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
         $entity1 = new DoubleNameEntity(1, 'Foo', null);
         $violationsList = $validator->validate($entity1);
-        $this->assertEquals(0, $violationsList->count(), "No violations found on entity before it is saved to the database.");
+        $this->assertEquals(0, $violationsList->count(), 'No violations found on entity before it is saved to the database.');
 
         $em->persist($entity1);
         $em->flush();
 
         $violationsList = $validator->validate($entity1);
-        $this->assertEquals(0, $violationsList->count(), "No violations found on entity after it was saved to the database.");
+        $this->assertEquals(0, $violationsList->count(), 'No violations found on entity after it was saved to the database.');
 
         $entity2 = new DoubleNameEntity(2, 'Foo', null);
 
         $violationsList = $validator->validate($entity2);
-        $this->assertEquals(1, $violationsList->count(), "Violation found on entity with conflicting entity existing in the database.");
+        $this->assertEquals(1, $violationsList->count(), 'Violation found on entity with conflicting entity existing in the database.');
 
         /* @var ConstraintViolationInterface $violation */
         $violation = $violationsList[0];
@@ -327,7 +327,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateUniquenessAfterConsideringMultipleQueryResults()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em);
@@ -391,7 +391,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testAssociatedEntity()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em, 'Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity', array('single'));
@@ -419,7 +419,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testAssociatedEntityWithNull()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em, 'Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity', array('single'), null, 'findBy', false);
@@ -436,12 +436,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testAssociatedCompositeEntity()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $this->createSchema($em);
         $validator = $this->createValidator($entityManagerName, $em, 'Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity', array('composite'));
 
-        $composite = new CompositeIntIdEntity(1, 1, "test");
+        $composite = new CompositeIntIdEntity(1, 1, 'test');
         $associated = new AssociationEntity();
         $associated->composite = $composite;
 
@@ -506,7 +506,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableAllFilterAndReactivateAfter()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $em->getConfiguration()->addFilter('fooFilter1', 'Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures\FooFilter');
         $em->getConfiguration()->addFilter('fooFilter2', 'Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures\FooFilter');
@@ -526,7 +526,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableOneFilterAndReactivateAfter()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         $em->getConfiguration()->addFilter('fooFilter1', 'Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures\FooFilter');
         $em->getConfiguration()->addFilter('fooFilter2', 'Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures\FooFilter');

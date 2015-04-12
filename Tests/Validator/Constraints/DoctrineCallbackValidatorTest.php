@@ -38,7 +38,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $entityManagerName = "foo";
+        $entityManagerName = 'foo';
         $em = DoctrineTestHelper::createTestEntityManager();
         /* @var ManagerRegistry $registry */
         $registry = $this->createRegistryMock($entityManagerName, $em);
