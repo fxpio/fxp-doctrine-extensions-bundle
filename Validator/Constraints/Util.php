@@ -13,7 +13,6 @@ namespace Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
