@@ -14,6 +14,7 @@ namespace Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sonatra\Bundle\DoctrineExtensionsBundle\Util\SqlFilterUtil;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException;
@@ -84,12 +85,12 @@ class UniqueEntityValidator extends ConstraintValidator
     private function getResult($entity, Constraint $constraint, array $criteria, ObjectManager $em)
     {
         /* @var UniqueEntity $constraint */
-        $filters = Util::findFilters($em, (array) $constraint->filters, $constraint->allFilters);
+        $filters = SqlFilterUtil::findFilters($em, (array) $constraint->filters, $constraint->allFilters);
 
-        Util::actionFilter($em, 'disable', $filters);
+        SqlFilterUtil::actionFilter($em, SqlFilterUtil::DISABLE, $filters);
         $repository = $em->getRepository(get_class($entity));
         $result = $repository->{$constraint->repositoryMethod}($criteria);
-        Util::actionFilter($em, 'enable', $filters);
+        SqlFilterUtil::actionFilter($em, SqlFilterUtil::ENABLE, $filters);
 
         if (is_array($result)) {
             reset($result);
