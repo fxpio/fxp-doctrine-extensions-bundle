@@ -19,9 +19,6 @@ use Doctrine\ORM\EntityManager;
  */
 class SqlFilterUtil
 {
-    const ENABLE =  'enable';
-    const DISABLE = 'disable';
-
     /**
      * Get the list of SQL Filter name must to be disabled.
      *
@@ -44,6 +41,28 @@ class SqlFilterUtil
     }
 
     /**
+     * Enable the SQL Filters.
+     *
+     * @param ObjectManager $om      The ObjectManager instance
+     * @param array         $filters The list of SQL Filter
+     */
+    public static function enableFilters(ObjectManager $om, array $filters)
+    {
+        static::actionFilters($om, 'enable', $filters);
+    }
+
+    /**
+     * Disable the SQL Filters.
+     *
+     * @param ObjectManager $om      The ObjectManager instance
+     * @param array         $filters The list of SQL Filter
+     */
+    public static function disableFilters(ObjectManager $om, array $filters)
+    {
+        static::actionFilters($om, 'disable', $filters);
+    }
+
+    /**
      * Do find filters.
      *
      * @param array $filters
@@ -52,7 +71,7 @@ class SqlFilterUtil
      *
      * @return array
      */
-    public static function doFindFilters(array $filters, array $enabledFilters, $all)
+    protected static function doFindFilters(array $filters, array $enabledFilters, $all)
     {
         $reactivateFilters = array();
 
@@ -72,9 +91,9 @@ class SqlFilterUtil
      * @param string        $action  Value : disable|enable
      * @param array         $filters The list of SQL Filter
      */
-    public static function actionFilter(ObjectManager $om, $action, array $filters)
+    protected static function actionFilters(ObjectManager $om, $action, array $filters)
     {
-        if ($om instanceof EntityManager && (in_array($action, array(static::ENABLE, static::DISABLE)))) {
+        if ($om instanceof EntityManager) {
             foreach ($filters as $name) {
                 $om->getFilters()->$action($name);
             }

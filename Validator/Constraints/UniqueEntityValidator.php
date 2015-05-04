@@ -87,10 +87,10 @@ class UniqueEntityValidator extends ConstraintValidator
         /* @var UniqueEntity $constraint */
         $filters = SqlFilterUtil::findFilters($em, (array) $constraint->filters, $constraint->allFilters);
 
-        SqlFilterUtil::actionFilter($em, SqlFilterUtil::DISABLE, $filters);
+        SqlFilterUtil::disableFilters($em, $filters);
         $repository = $em->getRepository(get_class($entity));
         $result = $repository->{$constraint->repositoryMethod}($criteria);
-        SqlFilterUtil::actionFilter($em, SqlFilterUtil::ENABLE, $filters);
+        SqlFilterUtil::enableFilters($em, $filters);
 
         if (is_array($result)) {
             reset($result);
