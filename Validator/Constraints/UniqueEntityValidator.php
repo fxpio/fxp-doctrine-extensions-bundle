@@ -131,7 +131,7 @@ class UniqueEntityValidator extends ConstraintValidator
      *
      * @throws ConstraintDefinitionException
      */
-    private function getCriteria($entity, Constraint $constraint, ObjectManager $em)
+    protected function getCriteria($entity, Constraint $constraint, ObjectManager $em)
     {
         /* @var UniqueEntity $constraint */
         /* @var \Doctrine\ORM\Mapping\ClassMetadata $class */
