@@ -13,9 +13,9 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/framework-bundle": "~2.5",
-        "symfony/doctrine-bridge": "~2.5",
-        "symfony/validator": "~2.5",
+        "symfony/framework-bundle": "~2.8",
+        "symfony/doctrine-bridge": "~2.8",
+        "symfony/validator": "~2.8",
         "doctrine/orm": "~2.5"
     },
     "suggest": {
