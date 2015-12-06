@@ -15,10 +15,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\CompositeIntIdEntity;
+use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Tests\Fixtures\FakeMetadataFactory;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\DoubleNameEntity;
@@ -26,8 +27,8 @@ use Symfony\Bridge\Doctrine\Tests\Fixtures\AssociationEntity;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntity;
 use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Validator;
 use Doctrine\ORM\Tools\SchemaTool;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 /**
  * Tests case for unique entity validator.
@@ -134,8 +135,9 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $metadataFactory->addMetadata($metadata);
         /* @var ConstraintValidatorFactoryInterface $validatorFactory */
         $validatorFactory = $this->createValidatorFactory($uniqueValidator);
+        $contextFactory = new ExecutionContextFactory(new IdentityTranslator(), null);
 
-        return new Validator($metadataFactory, $validatorFactory, new DefaultTranslator());
+        return new RecursiveValidator($contextFactory, $metadataFactory, $validatorFactory, array());
     }
 
     protected function createSchema($em)

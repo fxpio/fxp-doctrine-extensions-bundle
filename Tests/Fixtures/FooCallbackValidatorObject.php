@@ -11,7 +11,7 @@
 
 namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\Fixtures;
 
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Fixture object for doctrine callback validator.
@@ -23,11 +23,11 @@ class FooCallbackValidatorObject
     /**
      * Validates method in object instance.
      *
-     * @param ExecutionContext $context
+     * @param ExecutionContextInterface $context
      *
      * @return bool
      */
-    public function validate(ExecutionContext $context)
+    public function validate(ExecutionContextInterface $context)
     {
         $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
@@ -38,11 +38,11 @@ class FooCallbackValidatorObject
      * Validates static method in object instance.
      *
      * @param $object
-     * @param ExecutionContext $context
+     * @param ExecutionContextInterface $context
      *
      * @return bool
      */
-    public static function validateStatic($object, ExecutionContext $context)
+    public static function validateStatic($object, ExecutionContextInterface $context)
     {
         $context->addViolation('Static message', array('{{ value }}' => 'baz'), 'otherInvalidValue');
 

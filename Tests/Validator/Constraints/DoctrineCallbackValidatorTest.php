@@ -17,7 +17,8 @@ use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\DoctrineCallba
 use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\DoctrineCallbackValidator;
 use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 /**
  * Tests case for doctrine callback validator.
@@ -42,10 +43,10 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
         $em = DoctrineTestHelper::createTestEntityManager();
         /* @var ManagerRegistry $registry */
         $registry = $this->createRegistryMock($entityManagerName, $em);
-        $context = $this->getMock('Symfony\Component\Validator\ExecutionContext', array(), array(), '', false);
+        $context = $this->getMock('Symfony\Component\Validator\Context\ExecutionContextInterface', array(), array(), '', false);
         $this->context = $context;
         $this->validator = new DoctrineCallbackValidator($registry);
-        /* @var ExecutionContext $context */
+        /* @var ExecutionContextInterface $context */
         $this->validator->initialize($context);
     }
 
@@ -119,7 +120,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
     public function testClosure()
     {
         $object = new FooCallbackValidatorObject();
-        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context) {
+        $constraint = new DoctrineCallback(function ($object, ExecutionContextInterface $context) {
             $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
             return false;
@@ -136,7 +137,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testClosureNullObject()
     {
-        $constraint = new DoctrineCallback(function ($object, ExecutionContext $context) {
+        $constraint = new DoctrineCallback(function ($object, ExecutionContextInterface $context) {
             $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
             return false;
@@ -155,7 +156,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $object = new FooCallbackValidatorObject();
         $constraint = new DoctrineCallback(array(
-            'callback' => function ($object, ExecutionContext $context) {
+            'callback' => function ($object, ExecutionContextInterface $context) {
                     $context->addViolation('My message', array('{{ value }}' => 'foobar'), 'invalidValue');
 
                     return false;
