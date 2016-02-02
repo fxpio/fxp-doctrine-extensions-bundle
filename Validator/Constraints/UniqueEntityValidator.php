@@ -224,6 +224,7 @@ class UniqueEntityValidator extends ConstraintValidator
             $em->initializeObject($criteria[$fieldName]);
 
             $relatedClass = $em->getClassMetadata($class->getAssociationTargetClass($fieldName));
+            $isObject = is_object($criteria[$fieldName]);
             $relatedId = $relatedClass->getIdentifierValues($criteria[$fieldName]);
 
             if (count($relatedId) > 1) {
@@ -232,7 +233,27 @@ class UniqueEntityValidator extends ConstraintValidator
                     'part of a unique constraint in: '.$class->getName().'#'.$fieldName
                 );
             }
-            $criteria[$fieldName] = array_pop($relatedId);
+
+            $value = array_pop($relatedId);
+            $criteria[$fieldName] = $isObject && null === $value
+                ? $this->formatEmptyIdentifier($relatedClass)
+                : $value;
         }
+    }
+
+    /**
+     * Format the empty identifier value for entity with relation.
+     *
+     * @param ClassMetadata $meta The class metadata of entity relation
+     *
+     * @return int|string
+     */
+    private function formatEmptyIdentifier(ClassMetadata $meta)
+    {
+        $type = $meta->getTypeOfField(current($meta->getIdentifier()));
+
+        return in_array($type, array('bigint', 'decimal', 'integer', 'smallint', 'float'))
+            ? 0
+            : '';
     }
 }
