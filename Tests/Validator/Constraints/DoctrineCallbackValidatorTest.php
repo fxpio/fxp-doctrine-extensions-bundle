@@ -19,7 +19,6 @@ use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-
 /**
  * Tests case for doctrine callback validator.
  *
