@@ -42,7 +42,9 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
         $em = DoctrineTestHelper::createTestEntityManager();
         /* @var ManagerRegistry $registry */
         $registry = $this->createRegistryMock($entityManagerName, $em);
-        $context = $this->getMock('Symfony\Component\Validator\Context\ExecutionContextInterface', array(), array(), '', false);
+        $context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContextInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->context = $context;
         $this->validator = new DoctrineCallbackValidator($registry);
         /* @var ExecutionContextInterface $context */
@@ -57,7 +59,7 @@ class DoctrineCallbackValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function createRegistryMock($entityManagerName, $em)
     {
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $registry->expects($this->any())
             ->method('getManager')
             ->with($this->equalTo($entityManagerName))

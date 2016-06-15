@@ -39,7 +39,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 {
     protected function createRegistryMock($entityManagerName, $em)
     {
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $registry->expects($this->any())
             ->method('getManager')
             ->with($this->equalTo($entityManagerName))
@@ -68,7 +68,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($repositoryMock))
         ;
 
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata = $this->getMockBuilder('Doctrine\Common\Persistence\Mapping\ClassMetadata')->getMock();
         $classMetadata
             ->expects($this->any())
             ->method('hasField')
@@ -96,7 +96,7 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function createValidatorFactory($uniqueValidator)
     {
-        $validatorFactory = $this->getMock('Symfony\Component\Validator\ConstraintValidatorFactoryInterface');
+        $validatorFactory = $this->getMockBuilder('Symfony\Component\Validator\ConstraintValidatorFactoryInterface')->getMock();
         $validatorFactory->expects($this->any())
             ->method('getInstance')
             ->with($this->isInstanceOf('Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntity'))
@@ -152,6 +152,9 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
             ));
     }
 
+    /**
+     * @expectedException \Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException
+     */
     public function testConstraintIsNotUniqueEntity()
     {
         /* @var ManagerRegistry $registry */
@@ -164,10 +167,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
+    /**
+     * @expectedException \Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException
+     */
     public function testConstraintWrongFieldType()
     {
         /* @var ManagerRegistry $registry */
@@ -179,10 +184,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = new UniqueEntity(array('fields' => 42));
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
+    /**
+     * @expectedException \Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException
+     */
     public function testConstraintWrongErrorPath()
     {
         /* @var ManagerRegistry $registry */
@@ -194,10 +201,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint = new UniqueEntity(array('fields' => 'name', 'errorPath' => 42));
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\UnexpectedTypeException');
         $validator->validate($entity, $constraint);
     }
 
+    /**
+     * @expectedException \Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException
+     */
     public function testConstraintHasNotField()
     {
         /* @var ManagerRegistry $registry */
@@ -210,10 +219,12 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $constraint->fields = array();
         $entity = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException');
         $validator->validate($entity, $constraint);
     }
 
+    /**
+     * @expectedException \Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException
+     */
     public function testConstraintHasNotExistingField()
     {
         $entityManagerName = 'foo';
@@ -222,7 +233,6 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = $this->createValidator($entityManagerName, $em, null, '42');
         $entity1 = new SingleIntIdEntity(1, 'Foo');
 
-        $this->setExpectedException('\Sonatra\Bundle\DoctrineExtensionsBundle\Exception\ConstraintDefinitionException');
         $validator->validate($entity1);
     }
 
@@ -436,6 +446,10 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $violationsList->count());
     }
 
+    /**
+     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
+     * @expectedExceptionMessage Associated entities are not allowed to have more than one identifier field
+     */
     public function testAssociatedCompositeEntity()
     {
         $entityManagerName = 'foo';
@@ -451,20 +465,20 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $em->persist($associated);
         $em->flush();
 
-        $this->setExpectedException(
-            'Symfony\Component\Validator\Exception\ConstraintDefinitionException',
-            'Associated entities are not allowed to have more than one identifier field'
-        );
         $validator->validate($associated);
     }
 
+    /**
+     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
+     * @expectedExceptionMessage Object manager "foo" does not exist.
+     */
     public function testDedicatedEntityManagerNullObject()
     {
         $uniqueFields = array('name');
         $entityManagerName = 'foo';
 
         /* @var ManagerRegistry $registry */
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
 
         $constraint = new UniqueEntity(array(
             'fields' => $uniqueFields,
@@ -475,20 +489,19 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
 
         $entity = new SingleIntIdEntity(1, null);
 
-        $this->setExpectedException(
-            'Symfony\Component\Validator\Exception\ConstraintDefinitionException',
-            'Object manager "foo" does not exist.'
-        );
-
         $uniqueValidator->validate($entity, $constraint);
     }
 
+    /**
+     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
+     * @expectedExceptionMessage Unable to find the object manager associated with an entity of class "Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity"
+     */
     public function testEntityManagerNullObject()
     {
         $uniqueFields = array('name');
 
         /* @var ManagerRegistry $registry */
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
 
         $constraint = new UniqueEntity(array(
             'fields' => $uniqueFields,
@@ -497,11 +510,6 @@ class UniqueEntityValidatorTest extends \PHPUnit_Framework_TestCase
         $uniqueValidator = new UniqueEntityValidator($registry);
 
         $entity = new SingleIntIdEntity(1, null);
-
-        $this->setExpectedException(
-            'Symfony\Component\Validator\Exception\ConstraintDefinitionException',
-            'Unable to find the object manager associated with an entity of class "Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity"'
-        );
 
         $uniqueValidator->validate($entity, $constraint);
     }
