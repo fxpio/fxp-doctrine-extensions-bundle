@@ -23,7 +23,10 @@
         "creof/doctrine2-spatial": "For add geo spacial extensions"
     },
     "autoload": {
-        "psr-4": { "Sonatra\\Bundle\\DoctrineExtensionsBundle\\": "" }
+        "psr-4": { "Sonatra\\Bundle\\DoctrineExtensionsBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {
