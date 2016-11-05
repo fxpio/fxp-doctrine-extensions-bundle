@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b26985aa6cbb17c6953b27daab9d1110",
-    "content-hash": "80b639e0abdc1ed55588aeacb6edcda0",
+    "hash": "25be26061bc46871ce83829058e877dc",
+    "content-hash": "7890b6c58e7999ea81f26f1c0285abaf",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -753,17 +753,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonatra/sonatra-doctrine-extensions.git",
-                "reference": "00f3f66c0d8d8e6d786d80b536f446edb63e2f34"
+                "reference": "9bb01c03873d9217436f7c66f4174f424940377e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonatra/sonatra-doctrine-extensions/zipball/00f3f66c0d8d8e6d786d80b536f446edb63e2f34",
-                "reference": "00f3f66c0d8d8e6d786d80b536f446edb63e2f34",
+                "url": "https://api.github.com/repos/sonatra/sonatra-doctrine-extensions/zipball/9bb01c03873d9217436f7c66f4174f424940377e",
+                "reference": "9bb01c03873d9217436f7c66f4174f424940377e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "~2.5",
-                "php": ">=5.5.0",
+                "php": ">=5.6.0",
                 "symfony/doctrine-bridge": "~3.0",
                 "symfony/validator": "~3.0"
             },
@@ -803,7 +803,7 @@
                 "unique entity",
                 "validator"
             ],
-            "time": "2016-11-05 11:37:24"
+            "time": "2016-11-05 14:06:57"
         },
         {
             "name": "symfony/asset",
@@ -2356,7 +2356,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }
