@@ -11,7 +11,7 @@ The Sonatra DoctrineExtensionsBundle add doctrine validators.
 
 Features include:
 
-- Doctrine Unique Entity Validator with ability to disable a list of SQL Filter (or all)
+- All features of [Sonatra Doctrine Extensions](https://github.com/sonatra/sonatra-doctrine-extensions)
 
 Documentation
 -------------
