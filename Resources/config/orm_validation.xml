@@ -5,8 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sonatra.doctrine_extensions.orm.validator.unique.class">Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\UniqueEntityValidator</parameter>
-        <parameter key="sonatra_doctrine_extensions.orm.validator.doctrine_callback.class">Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\DoctrineCallbackValidator</parameter>
+        <parameter key="sonatra.doctrine_extensions.orm.validator.unique.class">Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntityValidator</parameter>
+        <parameter key="sonatra_doctrine_extensions.orm.validator.doctrine_callback.class">Sonatra\Component\DoctrineExtensions\Validator\Constraints\DoctrineCallbackValidator</parameter>
     </parameters>
 
     <services>

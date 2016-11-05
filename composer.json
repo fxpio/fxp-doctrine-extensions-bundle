@@ -14,13 +14,7 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~3.0",
-        "symfony/doctrine-bridge": "~3.0",
-        "symfony/validator": "~3.0",
-        "doctrine/orm": "~2.5"
-    },
-    "suggest": {
-        "stof/doctrine-extensions-bundle": "For use some nice extensions for doctrine",
-        "creof/doctrine2-spatial": "For add geo spacial extensions"
+        "sonatra/doctrine-extensions": "~1.0@dev"
     },
     "autoload": {
         "psr-4": { "Sonatra\\Bundle\\DoctrineExtensionsBundle\\": "" },

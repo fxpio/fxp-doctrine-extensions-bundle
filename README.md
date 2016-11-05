@@ -37,7 +37,7 @@ About
 -----
 
 Sonatra DoctrineExtensionsBundle is a [sonatra](https://github.com/sonatra) initiative.
-See also the list of [contributors](https://github.com/sonatra/SonatraDoctrineExtensionsBundle/contributors).
+See also the list of [contributors](https://github.com/sonatra/SonatraDoctrineExtensionsBundle/graphs/contributors).
 
 Reporting an issue or a feature request
 ---------------------------------------

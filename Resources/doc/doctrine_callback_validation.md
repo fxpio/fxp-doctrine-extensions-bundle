@@ -15,12 +15,12 @@ including creating and assigning validation errors.
 >  as you'll see in the example, a callback method has the ability to directly
 >  add validator "violations".
 
-|                |                                                                                        |
-|----------------|----------------------------------------------------------------------------------------|
-| **Applies to** | `class`                                                                                |
-| **Options**    | <ul><li>[callback](#callback)</li></ul>                                                |
-| **Class**      | `Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\Callback`               |
-| **Validator**  | `Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints\CallbackValidator`      |
+|                |                                                                                     |
+|----------------|-------------------------------------------------------------------------------------|
+| **Applies to** | `class`                                                                             |
+| **Options**    | <ul><li>[callback](#callback)</li></ul>                                             |
+| **Class**      | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\Callback`               |
+| **Validator**  | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\CallbackValidator`      |
 
 ## Configuration
 
@@ -41,7 +41,7 @@ namespace Acme\BlogBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints as Assert;
+use Sonatra\Component\DoctrineExtensions\Validator\Constraints as Assert;
 
 class Author
 {
@@ -77,7 +77,7 @@ class Author
 namespace Acme\BlogBundle\Entity;
 
 use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Sonatra\Bundle\DoctrineExtensionsBundle\Validator\Constraints as Assert;
+use Sonatra\Component\DoctrineExtensions\Validator\Constraints as Assert;
 
 class Author
 {
