@@ -11,6 +11,7 @@
 
 namespace Sonatra\Bundle\DoctrineExtensionsBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Bundle\DoctrineExtensionsBundle\DependencyInjection\SonatraDoctrineExtensionsExtension;
 use Sonatra\Bundle\DoctrineExtensionsBundle\SonatraDoctrineExtensionsBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SonatraDoctrineExtensionsExtensionTest extends \PHPUnit_Framework_TestCase
+class SonatraDoctrineExtensionsExtensionTest extends TestCase
 {
     public function testExtensionExist()
     {
