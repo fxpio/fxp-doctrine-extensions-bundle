@@ -14,8 +14,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=5.6.0",
-        "symfony/framework-bundle": "^3.0.0",
+        "php": ">=7.0.0",
+        "symfony/framework-bundle": "^3.3.0",
         "sonatra/doctrine-extensions": "^1.0.0"
     },
     "autoload": {
