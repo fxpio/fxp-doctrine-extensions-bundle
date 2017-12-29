@@ -9,6 +9,13 @@
  * file that was distributed with this source code.
  */
 
-$loader = require __DIR__.'/../vendor/autoload.php';
+namespace Fxp\Bundle\DoctrineExtensionsBundle;
 
-Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+/**
+ * @author François Pluchino <francois.pluchino@gmail.com>
+ */
+class FxpDoctrineExtensionsBundle extends Bundle
+{
+}

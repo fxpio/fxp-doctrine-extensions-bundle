@@ -19,8 +19,8 @@ including creating and assigning validation errors.
 |----------------|-------------------------------------------------------------------------------------|
 | **Applies to** | `class`                                                                             |
 | **Options**    | <ul><li>[callback](#callback)</li></ul>                                             |
-| **Class**      | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\Callback`               |
-| **Validator**  | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\CallbackValidator`      |
+| **Class**      | `Fxp\Component\DoctrineExtensions\Validator\Constraints\Callback`               |
+| **Validator**  | `Fxp\Component\DoctrineExtensions\Validator\Constraints\CallbackValidator`      |
 
 ## Configuration
 
@@ -41,7 +41,7 @@ namespace Acme\BlogBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Sonatra\Component\DoctrineExtensions\Validator\Constraints as Assert;
+use Fxp\Component\DoctrineExtensions\Validator\Constraints as Assert;
 
 class Author
 {
@@ -77,7 +77,7 @@ class Author
 namespace Acme\BlogBundle\Entity;
 
 use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Sonatra\Component\DoctrineExtensions\Validator\Constraints as Assert;
+use Fxp\Component\DoctrineExtensions\Validator\Constraints as Assert;
 
 class Author
 {

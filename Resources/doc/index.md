@@ -14,23 +14,13 @@ Installation is a quick, 2 step process:
 
 ### Step 1: Download the bundle using composer
 
-Add Sonatra DoctrineExtensionsBundle in your composer.json:
-
-``` js
-{
-    "require": {
-        "sonatra/doctrine-extensions-bundle": "~1.0"
-    }
-}
-```
-
-Or tell composer to download the bundle by running the command:
+Tell composer to download the bundle by running the command:
 
 ``` bash
-$ php composer.phar require sonatra/doctrine-extensions-bundle:"~1.0"
+$ composer require fxp/doctrine-extensions-bundle
 ```
 
-Composer will install the bundle to your project's `vendor/sonatra` directory.
+Composer will install the bundle to your project's `vendor/fxp` directory.
 
 ### Step 2: Enable the bundle
 
@@ -44,7 +34,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new Sonatra\Bundle\DoctrineExtensionsBundle\SonatraDoctrineExtensionsBundle(),
+        new Fxp\Bundle\DoctrineExtensionsBundle\FxpDoctrineExtensionsBundle(),
     );
 }
 ```
@@ -52,7 +42,7 @@ public function registerBundles()
 ### Next Steps
 
 Now that you have completed the basic installation and configuration of the
-Sonatra DoctrineExtensionsBundle, you are ready to learn about usages of the bundle.
+Fxp DoctrineExtensionsBundle, you are ready to learn about usages of the bundle.
 
 The following documents are available:
 

@@ -9,8 +9,8 @@ using an email address that already exists in the system.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Applies to** | `class`                                                                                                                                                                                                                                                         |
 | **Options**    | <ul><li>[fields](#fields)</li><li>[message](#message)</li><li>[em](#em)</li><li>[repositoryMethod](#repositoryMethod)</li><li>[errorPath](#errorPath)</li><li>[ignoreNull](#ignoreNull)</li><li>[filters](#filters)</li><li>[allFilters](#allFilters)</li></ul> |
-| **Class**      | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity`                                                                                                                                                                                       |
-| **Validator**  | `Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntityValidator`                                                                                                                                                                              |
+| **Class**      | `Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity`                                                                                                                                                                                       |
+| **Validator**  | `Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntityValidator`                                                                                                                                                                              |
 
 ## Basic Usage
 
@@ -26,7 +26,7 @@ organization. You can use the ``UniqueEntity`` constraint to guarantee that the
 # src/Acme/UserBundle/Resources/config/validation.yml
     Acme\UserBundle\Entity\Author:
         constraints:
-            - Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity: email
+            - Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity: email
         properties:
             email:
                 - Email: ~
@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 // DON'T forget this use statement!!!
-use Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity;
+use Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
@@ -73,7 +73,7 @@ class Author
     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
     <class name="Acme\UserBundle\Entity\Author">
-        <constraint name="Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity">
+        <constraint name="Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity">
             <option name="fields">email</option>
             <option name="message">This email already exists.</option>
         </constraint>
@@ -93,7 +93,7 @@ namespace Acme\UserBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 // DON'T forget this use statement!!!
-use Sonatra\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity;
+use Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntity;
 
 class Author
 {
