@@ -4,18 +4,13 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="fxp.doctrine_extensions.orm.validator.unique.class">Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntityValidator</parameter>
-        <parameter key="fxp_doctrine_extensions.orm.validator.doctrine_callback.class">Fxp\Component\DoctrineExtensions\Validator\Constraints\DoctrineCallbackValidator</parameter>
-    </parameters>
-
     <services>
-        <service id="fxp.doctrine_extensions.orm.validator.unique" class="%fxp.doctrine_extensions.orm.validator.unique.class%">
+        <service id="fxp.doctrine_extensions.orm.validator.unique" class="Fxp\Component\DoctrineExtensions\Validator\Constraints\UniqueEntityValidator">
             <tag name="validator.constraint_validator" alias="fxp.doctrine_extensions.orm.validator.unique" />
             <argument type="service" id="doctrine" />
         </service>
 
-        <service id="fxp_doctrine_extensions.orm.validator.doctrine_callback" class="%fxp_doctrine_extensions.orm.validator.doctrine_callback.class%">
+        <service id="fxp_doctrine_extensions.orm.validator.doctrine_callback" class="Fxp\Component\DoctrineExtensions\Validator\Constraints\DoctrineCallbackValidator">
             <tag name="validator.constraint_validator" alias="fxp_doctrine_extensions.orm.validator.doctrine_callback" />
             <argument type="service" id="doctrine" />
         </service>
