@@ -41,10 +41,10 @@ class FxpDoctrineExtensionsExtensionTest extends TestCase
 
         $extension = new FxpDoctrineExtensionsExtension();
         $container->registerExtension($extension);
-        $extension->load(array(), $container);
+        $extension->load([], $container);
 
-        $container->getCompilerPassConfig()->setOptimizationPasses(array());
-        $container->getCompilerPassConfig()->setRemovingPasses(array());
+        $container->getCompilerPassConfig()->setOptimizationPasses([]);
+        $container->getCompilerPassConfig()->setRemovingPasses([]);
         $container->compile();
 
         return $container;
