@@ -20,10 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Tests case for Extension.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class FxpDoctrineExtensionsExtensionTest extends TestCase
+final class FxpDoctrineExtensionsExtensionTest extends TestCase
 {
-    public function testExtensionExist()
+    public function testExtensionExist(): void
     {
         $container = $this->createContainer();
 
