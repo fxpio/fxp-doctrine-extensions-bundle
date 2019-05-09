@@ -34,7 +34,7 @@ final class FxpDoctrineExtensionsExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition('fxp_doctrine_extensions.orm.validator.doctrine_callback'));
     }
 
-    protected function createContainer()
+    protected function createContainer(): ContainerBuilder
     {
         $container = new ContainerBuilder();
 
